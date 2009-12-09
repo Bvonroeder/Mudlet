@@ -306,6 +306,7 @@ void TCommandLine::focusOutEvent( QFocusEvent * event )
 
 void TCommandLine::enterCommand( QKeyEvent * event )
 {
+    text().replace(QChar( 0x21af ), " "); //Replace newline char with spaces.
     mpHost->send( text() );
     if( text().size() > 0 )
     {
