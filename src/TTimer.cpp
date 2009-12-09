@@ -199,7 +199,7 @@ bool TTimer::compileScript()
 
 void TTimer::execute()
 {
-    if( mudlet::debugMode ) {TDebug(QColor(Qt::darkYellow),QColor(Qt::darkBlue)) << "\n[TIMER EXECUTES]: "<<mName<<" fired. Executing command="<<mCommand<<" and executing script:"<<mScript<<"\n" >> 0;}
+    if( mudlet::debugMode && ! isFolder() ) {TDebug(QColor(Qt::darkYellow),QColor(Qt::darkBlue)) << "\n[TIMER EXECUTES]: "<<mName<<" fired. Executing command="<<mCommand<<" and executing script:"<<mScript<<"\n" >> 0;}
     if( ! isActive() ) return;
     if( mIsTempTimer )
     {
