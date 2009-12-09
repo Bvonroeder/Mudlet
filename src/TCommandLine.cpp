@@ -296,6 +296,11 @@ void TCommandLine::focusOutEvent( QFocusEvent * event )
         mSelectionStart = selectionStart();
         mSelectedText = selectedText();
     }
+    else
+    {
+        mSelectionStart = 0;
+        mSelectedText = "";
+    }
     QLineEdit::focusOutEvent( event );
 }
 
@@ -452,9 +457,10 @@ void TCommandLine::historyDown(QKeyEvent *event)
 void TCommandLine::historyUp(QKeyEvent *event)
 {
     if( mHistoryList.size() < 1 ) return;
+    
     if( (selectedText().size() == text().size()) || (text().size() == 0) )
     {
-        mHistoryBuffer++;
+        if( text().size() != 0) mHistoryBuffer++;
         if( mHistoryBuffer >= mHistoryList.size() ) mHistoryBuffer = mHistoryList.size()-1;
         if( mHistoryBuffer < 0 ) mHistoryBuffer = 0;
         setText( mHistoryList[mHistoryBuffer] );
