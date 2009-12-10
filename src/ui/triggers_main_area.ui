@@ -1369,7 +1369,7 @@ Without this option, the pattern matching will stop after the first successful m
 otherwise highlight the entire match</string>
            </property>
            <property name="title">
-            <string>colorizer trigger</string>
+            <string>highlight trigger</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
