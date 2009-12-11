@@ -85,6 +85,7 @@ mudlet::mudlet()
     addToolBar( mpMainToolBar );
     //restoreBar = menuBar()->addMenu( "" );
     mpMainToolBar->setMovable( false );
+    mpMainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
     addToolBarBreak();
     QWidget * frame = new QWidget( this );
     frame->setFocusPolicy( Qt::NoFocus );
@@ -180,8 +181,6 @@ mudlet::mudlet()
     QAction * actionReconnect = new QAction(QIcon(":/icons/system-restart.png"), tr("Reconnect"), this);
     actionNotes->setStatusTip(tr("reconnect"));
     mpMainToolBar->addAction( actionReconnect );
-
-
 
     QAction * actionMultiView = new QAction(QIcon(":/icons/view-split-left-right.png"), tr("MultiView"), this);
     actionMultiView->setStatusTip(tr("MultiView"));
