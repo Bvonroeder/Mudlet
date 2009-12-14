@@ -721,7 +721,7 @@ void cTelnet::postData()
     mpHost->mpConsole->printOnDisplay( mMudData );
     if( mAlertOnNewData )
     {
-        QApplication::alert( mudlet::self() );
+        QApplication::alert( mudlet::self(), 0);
     }
 }
 
