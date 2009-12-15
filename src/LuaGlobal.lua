@@ -12,6 +12,15 @@
 -- Functions written by Blaine von Roeder - December 2009
 ----------------------------------------------------------------------------------
 
+atcp = {}
+
+--Overloadable function for ATCP Events
+function handleAtcpEvent(eventName, eventArgs)
+-- EventName is "vitals","exits","roomname"
+-- EventArgs is the new info(ex: exits has args "u,d")
+end
+
+
 -- This function flags a variable to be saved by Mudlet's variable persistence system.
 -- Usage: remember("varName")
 -- Example: remember("table_Weapons")

@@ -4740,9 +4740,69 @@ void TLuaInterpreter::slotSetBgColor(int hostID, int r, int g, int b )
     pHost->mpConsole->setBgColor( r, g, b );
 }
 
+void TLuaInterpreter::parseATCP( QString & atcpString )
+{
+    lua_State * L = pGlobalLua;
+    qDebug()<<atcpString;
+    QStringList atcpArgs;
+    //QStringList tableKeys = (QStringList() << "vitals" << "exits" << "roomname" << "charname" << "chartitle");
+    char* type;
+    QString arg2;
+    if (atcpString.startsWith("Char.Vitals"))
+    {
+        type = "vitals"; // 1 for Vitals
+        //QString tempString = atcpString;
+        //qDebug()<<"Test: "<<tempString.remove(0,12);
+        arg2 = atcpString.remove(0,12);
+    } 
+    else if (atcpString.startsWith("Room.Exits"))
+    {
+        type = "exits"; // 2 for exits
+        arg2 = atcpString.remove(0,11);
+    }
+    else if (atcpString.startsWith("Room.Brief"))
+    {
+        type = "roomname";
+        arg2 = atcpString.remove(0,11);
+    }
+    else if (atcpString.startsWith("Char.Name"))
+    {
+        type = "charname";
+        arg2 = atcpString.remove(0,10);
+    }
+    else
+    {
+        qDebug()<<"Unanticipated ATCP: "<<atcpString;
+    }
+    //else if (atcpString.startsWith(
+    //QString arg1 = atcpArgs[0];
+    //char* arg2 = atcpArgs[1].toLatin1().data(); 
+    
+    if ((type !="charname")) 
+    {
+        loadATCPTable(type, arg2.toLatin1().data());
+    } 
+    else if (type == "charname")
+    {
+        //qDebug()<<"Got a character name";
+        QStringList multiLine = arg2.split('\n');
+        loadATCPTable("charname",multiLine[0].toLatin1().data());
+        loadATCPTable("chartitle",multiLine[1].toLatin1().data());
+    }
+}
 
-
-
-
-
-
+void TLuaInterpreter::loadATCPTable( char* type, char* args )
+{
+    lua_State * L = pGlobalLua;
+    lua_getglobal( L, "atcp" );
+    //qDebug()<<"Args: "<<args;
+    //Load table onto stack
+    lua_pushstring( L, type ); //Key
+    lua_pushstring( L, args ); // Value
+    lua_rawset( L, -3 ); // -3 = atcp, -2 = key, -1 = value.
+    lua_pop(L,1);//Get rid of the table.
+    lua_getglobal( L, "handleAtcpEvent" );
+    lua_pushstring( L, type );
+    lua_pushstring( L, args );
+    lua_call( L, 2, 0);
+}

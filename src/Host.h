@@ -122,6 +122,9 @@ public:
     void               reenableAllTriggers();
     void               set_USE_IRE_DRIVER_BUGFIX( bool b ){ mUSE_IRE_DRIVER_BUGFIX = b; mTelnet.set_USE_IRE_DRIVER_BUGFIX( b ); }
     void               set_LF_ON_GA( bool b ){ mLF_ON_GA = b; mTelnet.set_LF_ON_GA( b ); }
+    void               setUsesATCP( bool b ){ mUsesATCP = b; }
+    bool               getUsesATCP(){ return mUsesATCP; }
+    void               parseATCP( QString & );
     void               adjustNAWS();
     class              Exception_NoLogin{};
     class              Exception_NoConnectionAvailable{};
@@ -215,6 +218,7 @@ public:
     bool               mIsGoingDown;
     bool               mLF_ON_GA;
     bool               mAlertOnNewData;
+    bool               mUsesATCP;
 };
 #endif
 

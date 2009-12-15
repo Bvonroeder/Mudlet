@@ -443,6 +443,40 @@ void cTelnet::processTelnetCommand (const string &command)
                            }
                        }
                    }
+                   else if( option == OPT_ATCP )
+                   {
+                        string cmd;
+                        sendTelnetOption(TN_DO,option);
+                        cmd += TN_IAC;
+                        cmd += TN_SB;
+                        cmd += OPT_ATCP;
+                        cmd += "hello Mudlet1.0.5";
+                        cmd += '\n';
+                        cmd += "auth 1";
+                        cmd += '\n';
+                        cmd += "char_vitals 1";
+                        cmd += '\n';
+                        cmd += "map_display 0";
+                        cmd += '\n';
+                        cmd += "room_exits 1";
+                        cmd += '\n';
+                        cmd += "room_brief 1";
+                        cmd += '\n';
+                        //cmd += "wiz 1";
+                        //cmd += '\n';
+                        cmd += TN_IAC;
+                        cmd += TN_SE;
+                        socketOutRaw(cmd);
+                        qDebug()<<"ATCP on";
+                        /*string cmd2;
+                        cmd2 += TN_IAC;
+                        cmd2 += TN_SB;
+                        cmd2 += OPT_ATCP;
+                        cmd2 += "login user pass";
+                        cmd2 += TN_IAC;
+                        cmd2 += TN_SE;
+                        socketOutRaw(cmd2);*/
+                   }
                    else
                    {
                        sendTelnetOption( TN_DONT, option );
@@ -612,6 +646,16 @@ void cTelnet::processTelnetCommand (const string &command)
                            socketOutRaw( cmd );
                       }
                   }
+                  break;
+              case OPT_ATCP:
+                  if ( mpHost->getUsesATCP() ) {
+                        string atcpMsg = command.substr(3,command.length()-5);
+                        QString myString = QString(atcpMsg.data());
+                        //qDebug()<<"Atcp: "<<myString;
+                        mpHost->getLuaInterpreter()->parseATCP(myString);
+                  }
+                  break;
+                        
                   //other cmds should not arrive, as they were not negotiated.
                   //if they do, they are merely ignored
           };//end switch 2

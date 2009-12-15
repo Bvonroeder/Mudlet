@@ -58,6 +58,7 @@ const char OPT_COMPRESS = 85;
 const char OPT_COMPRESS2 = 86;
 const char OPT_MSP = 90;
 const char OPT_MXP = 91;
+const char OPT_ATCP = 200;
 const char TNSB_IS = 0;
 const char TNSB_SEND = 1;
 

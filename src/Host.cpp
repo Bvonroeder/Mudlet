@@ -103,6 +103,7 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mInsertedMissingLF( false )
 , mLF_ON_GA( true )
 , mAlertOnNewData( true )
+, mUsesATCP( true )
 {
 }
 

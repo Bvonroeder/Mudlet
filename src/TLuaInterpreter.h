@@ -82,6 +82,8 @@ public:
     void setCaptureGroups( const std::list<std::string> &, const std::list<int> & );
     void setMultiCaptureGroups( const std::list< std::list<std::string> > & captureList,
                                 const std::list< std::list<int> > & posList );
+    void parseATCP( QString & );
+    void loadATCPTable( char*, char* );
 
     void startLuaSessionInterpreter();
     void adjustCaptureGroups( int x, int a );
