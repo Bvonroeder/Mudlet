@@ -1711,6 +1711,12 @@ int TLuaInterpreter::setBorderTop( lua_State *L )
     }
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     pHost->mBorderTopHeight = x1;
+    int x,y;
+    x = pHost->mpConsole->width();
+    y = pHost->mpConsole->height();
+    QSize s = QSize(x,y);
+    QResizeEvent event(s, s);
+    QApplication::sendEvent( pHost->mpConsole, &event);
     return 0;
 }
 
@@ -1729,6 +1735,12 @@ int TLuaInterpreter::setBorderBottom( lua_State *L )
     }
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     pHost->mBorderBottomHeight = x1;
+    int x,y;
+    x = pHost->mpConsole->width();
+    y = pHost->mpConsole->height();
+    QSize s = QSize(x,y);
+    QResizeEvent event(s, s);
+    QApplication::sendEvent( pHost->mpConsole, &event);
     return 0;
 }
 
@@ -1747,6 +1759,12 @@ int TLuaInterpreter::setBorderLeft( lua_State *L )
     }
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     pHost->mBorderLeftWidth = x1;
+    int x,y;
+    x = pHost->mpConsole->width();
+    y = pHost->mpConsole->height();
+    QSize s = QSize(x,y);
+    QResizeEvent event(s, s);
+    QApplication::sendEvent( pHost->mpConsole, &event);
     return 0;
 }
 
@@ -1765,6 +1783,12 @@ int TLuaInterpreter::setBorderRight( lua_State *L )
     }
     Host * pHost = TLuaInterpreter::luaInterpreterMap[L];
     pHost->mBorderRightWidth = x1;
+    int x,y;
+    x = pHost->mpConsole->width();
+    y = pHost->mpConsole->height();
+    QSize s = QSize(x,y);
+    QResizeEvent event(s, s);
+    QApplication::sendEvent( pHost->mpConsole, &event);
     return 0;
 }
 
@@ -4322,24 +4346,7 @@ void TLuaInterpreter::initLuaGlobals()
 
 
     QString n;
-    QString path = QDir::homePath()+"/.config/mudlet/LuaGlobal.lua";
-    int error = luaL_dofile( pGlobalLua, path.toLatin1().data() );
-    if( error != 0 )
-    {
-        string e = "no error message available from Lua";
-        if( lua_isstring( pGlobalLua, 1 ) ) 
-        {
-            e = "Lua error:";
-            e += lua_tostring( pGlobalLua, 1 );
-        }
-        //emit signalNewEcho(script->session, QString(e.c_str()));
-        qDebug()<<"LUA_ERROR: "<<e.c_str();
-    }
-    else
-    {
-        qDebug()<<"LUA_MESSAGE: LuaGlobal.lua loaded successfully.";
-    }
-    error = luaL_dostring( pGlobalLua, "require \"rex_pcre\"" );
+    int error = luaL_dostring( pGlobalLua, "require \"rex_pcre\"" );
 
     if( error != 0 )
     {
@@ -4355,10 +4362,25 @@ void TLuaInterpreter::initLuaGlobals()
     }
     else
     {
-        QString msg = "Lua module rex_pcre successfully loaded";
+        QString msg = "[INFO] found Lua module rex_pcre";
         gSysErrors << msg;
     }
-
+    QString path = QDir::homePath()+"/.config/mudlet/LuaGlobal.lua";
+    error = luaL_dofile( pGlobalLua, path.toLatin1().data() );
+    if( error != 0 )
+    {
+        string e = "no error message available from Lua";
+        if( lua_isstring( pGlobalLua, 1 ) ) 
+        {
+            e = "[CRITICAL ERROR] LuaGlobal.lua compile error - please report";
+            e += lua_tostring( pGlobalLua, 1 );
+        }
+        gSysErrors << e.c_str();
+    }
+    else
+    {
+        gSysErrors << "[INFO] LuaGlobal.lua loaded successfully.";
+    }
 
     lua_pop( pGlobalLua, lua_gettop( pGlobalLua ) );
     
