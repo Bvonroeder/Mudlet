@@ -91,6 +91,13 @@
             </property>
            </widget>
           </item>
+          <item>
+            <widget class="QCheckBox" name="mUsesATCP">
+            <property name="text">
+             <string>Listen for ATCP updates (Iron Realms Entertainment Games Only)</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

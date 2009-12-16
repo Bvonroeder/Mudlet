@@ -199,6 +199,7 @@ dlgProfilePreferences::dlgProfilePreferences( QWidget * pF, Host * pH )
         mRawStreamDump->setChecked( pHost->mRawStreamDump );
         mNoAntiAlias->setChecked( ! pHost->mNoAntiAlias );
         mAlertOnNewData->setChecked( pHost->mAlertOnNewData );
+        mUsesATCP->setChecked( pHost->mUsesATCP );
     }
 }
 
@@ -617,6 +618,7 @@ void dlgProfilePreferences::slot_save_and_exit()
     mudlet::self()->mShowMenuBar = showMenuBar->isChecked();
     pHost->mRawStreamDump = mRawStreamDump->isChecked();
     pHost->mNoAntiAlias = !mNoAntiAlias->isChecked();
+    pHost->mUsesATCP = mUsesATCP->isChecked();
     pHost->mAlertOnNewData = mAlertOnNewData->isChecked();
     pHost->mpConsole->changeColors();
 

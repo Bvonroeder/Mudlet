@@ -75,7 +75,6 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mBgColor           ( QColor(  0,  0,  0) )
 , mDisplayFont       ( QFont("Bitstream Vera Sans Mono", 10, QFont::Courier ) )//, mDisplayFont       ( QFont("Bitstream Vera Sans Mono", 10, QFont:://( QFont("Monospace", 10, QFont::Courier) )
 , mCommandLineFont   ( QFont("Bitstream Vera Sans Mono", 10, QFont::Courier ) )//( QFont("Monospace", 10, QFont::Courier) )
-, mCommandSeperator  ( QString(";") )
 , mWrapAt( 100 )
 , mWrapIndentCount( 0 )
 , mPrintCommand( true )
@@ -103,7 +102,7 @@ Host::Host( int port, QString hostname, QString login, QString pass, int id )
 , mInsertedMissingLF( false )
 , mLF_ON_GA( true )
 , mAlertOnNewData( true )
-, mUsesATCP( true )
+, mUsesATCP( false )
 {
 }
 

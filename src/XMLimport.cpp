@@ -324,7 +324,7 @@ void XMLimport::readHostPackage( Host * pT )
     pT->mNoAntiAlias = ( attributes().value("mNoAntiAlias") == "yes" );
     pT->mRawStreamDump = ( attributes().value("mRawStreamDump") == "yes" );
     pT->mAlertOnNewData = ( attributes().value("mAlertOnNewData") == "yes" );
-
+    pT->mUsesATCP = ( attributes().value("mUsesATCP") == "yes" );
     while( ! atEnd() ) 
     {
         readNext();
@@ -378,9 +378,9 @@ void XMLimport::readHostPackage( Host * pT )
                 pT->mWrapIndentCount = readElementText().toInt();
                 continue;
             }
-            else if( name() == "mCommandSeperator" )
+            else if( name() == "mCommandSeparator" )
             {
-                pT->mCommandSeperator = readElementText();
+                pT->mCommandSeparator = readElementText();
                 continue;
             }
             else if( name() == "mFgColor")

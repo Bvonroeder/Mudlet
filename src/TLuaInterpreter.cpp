@@ -4743,7 +4743,7 @@ void TLuaInterpreter::slotSetBgColor(int hostID, int r, int g, int b )
 void TLuaInterpreter::parseATCP( QString & atcpString )
 {
     lua_State * L = pGlobalLua;
-    qDebug()<<atcpString;
+    //qDebug()<<atcpString;
     QStringList atcpArgs;
     //QStringList tableKeys = (QStringList() << "vitals" << "exits" << "roomname" << "charname" << "chartitle");
     char* type;
@@ -4773,6 +4773,7 @@ void TLuaInterpreter::parseATCP( QString & atcpString )
     else
     {
         qDebug()<<"Unanticipated ATCP: "<<atcpString;
+        return;
     }
     //else if (atcpString.startsWith(
     //QString arg1 = atcpArgs[0];
