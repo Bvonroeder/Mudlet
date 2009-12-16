@@ -125,6 +125,7 @@ public:
     void               setUsesATCP( bool b ){ mUsesATCP = b; }
     bool               getUsesATCP(){ return mUsesATCP; }
     void               parseATCP( QString & );
+    void               sendATCPMsg( QString );
     void               adjustNAWS();
     class              Exception_NoLogin{};
     class              Exception_NoConnectionAvailable{};
@@ -154,7 +155,6 @@ public:
     int                mScreenHeight;
     int                mScreenWidth;
     QFont              mCommandLineFont;
-    QString            mCommandSeperator;
     bool               mSaveProfileOnExit;    
     //////////////////////////////////////////
     // this is serialized into hostOptions_2

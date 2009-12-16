@@ -190,7 +190,7 @@ void cTelnet::handle_socket_signal_connected()
     QString msg = "[INFO] A connection has been established successfully.\n";
     postMessage( msg );
     mConnectionTime.start();
-    if( (mpHost->getLogin().size()>0) && (mpHost->getPass().size()>0) )
+    if( (mpHost->getLogin().size()>0) && (mpHost->getPass().size()>0) && !(mpHost->getUsesATCP()))
     {
         mTimerLogin->start(2000);
         mTimerPass->start(3000);
@@ -443,39 +443,25 @@ void cTelnet::processTelnetCommand (const string &command)
                            }
                        }
                    }
-                   else if( option == OPT_ATCP )
+                   else if( option == OPT_ATCP && mpHost->getUsesATCP() )
                    {
-                        string cmd;
+                        QString helloString = "hello Mudlet1.0.5\nauth1\nchar_vitals 1\nroom_exits 1\nroom_brief 1";
                         sendTelnetOption(TN_DO,option);
-                        cmd += TN_IAC;
-                        cmd += TN_SB;
-                        cmd += OPT_ATCP;
-                        cmd += "hello Mudlet1.0.5";
-                        cmd += '\n';
-                        cmd += "auth 1";
-                        cmd += '\n';
-                        cmd += "char_vitals 1";
-                        cmd += '\n';
-                        cmd += "map_display 0";
-                        cmd += '\n';
-                        cmd += "room_exits 1";
-                        cmd += '\n';
-                        cmd += "room_brief 1";
-                        cmd += '\n';
-                        //cmd += "wiz 1";
-                        //cmd += '\n';
-                        cmd += TN_IAC;
-                        cmd += TN_SE;
-                        socketOutRaw(cmd);
-                        qDebug()<<"ATCP on";
-                        /*string cmd2;
-                        cmd2 += TN_IAC;
-                        cmd2 += TN_SB;
-                        cmd2 += OPT_ATCP;
-                        cmd2 += "login user pass";
-                        cmd2 += TN_IAC;
-                        cmd2 += TN_SE;
-                        socketOutRaw(cmd2);*/
+                        sendATCP(helloString);
+                        
+//                        socketOutRaw(cmd);
+                        //qDebug()<<"ATCP on";
+                        if ((mpHost->getLogin().size()>0) && (mpHost->getPass().size()>0))
+                        {
+                            QString loginString = ("login ");
+                            loginString += mpHost->getLogin();
+                            loginString += " ";
+                            loginString += mpHost->getPass();
+                            sendATCP(loginString);
+                            //qDebug()<<"Cmd2: "<<QString(cmd2.data());
+                            //socketOutRaw(cmd2);
+                        }
+                        
                    }
                    else
                    {
@@ -650,9 +636,8 @@ void cTelnet::processTelnetCommand (const string &command)
               case OPT_ATCP:
                   if ( mpHost->getUsesATCP() ) {
                         string atcpMsg = command.substr(3,command.length()-5);
-                        QString myString = QString(atcpMsg.data());
-                        //qDebug()<<"Atcp: "<<myString;
-                        mpHost->getLuaInterpreter()->parseATCP(myString);
+                        QString atcpString = QString(atcpMsg.data());
+                        mpHost->getLuaInterpreter()->parseATCP(atcpString);
                   }
                   break;
                         
@@ -1193,5 +1178,14 @@ MAIN_LOOP_END: ;
     lastTimeOffset = timeOffset.elapsed();
 }
 
-
-
+void cTelnet::sendATCP( QString atcpString )
+{
+    std::string cmd;
+    cmd+=TN_IAC;
+    cmd+=TN_SB;
+    cmd+=OPT_ATCP;
+    cmd+=atcpString.toLatin1().data();
+    cmd+=TN_IAC;
+    cmd+=TN_SE;
+    socketOutRaw(cmd);
+}

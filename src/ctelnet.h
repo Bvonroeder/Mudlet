@@ -89,6 +89,7 @@ public:
   void                recordReplay();
   void                loadReplay( QString & );
   void                _loadReplay();
+  void                sendATCP( QString );
   bool                mResponseProcessed;
   QTime               networkLatencyTime;
   double              networkLatency;

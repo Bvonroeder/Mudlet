@@ -84,6 +84,7 @@ public:
                                 const std::list< std::list<int> > & posList );
     void parseATCP( QString & );
     void loadATCPTable( char*, char* );
+    std::string generateAuthKey( std::string );
 
     void startLuaSessionInterpreter();
     void adjustCaptureGroups( int x, int a );

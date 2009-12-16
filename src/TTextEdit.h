@@ -120,9 +120,9 @@ private:
 
 
     QFont             mCommandLineFont;
-    QFont             mCommandSeperator;
+    QFont             mCommandSeparator;
 
-    bool              mIsDebugConsole;    
+    bool              mIsDebugConsole;
     
     int               mLeftMargin;
     int               mTopMargin;

@@ -4770,6 +4770,26 @@ void TLuaInterpreter::parseATCP( QString & atcpString )
         type = "charname";
         arg2 = atcpString.remove(0,10);
     }
+    else if (atcpString.startsWith("Auth.Request CH"))
+    {
+        QString seed = atcpString.remove(0,16);
+        string authKey = generateAuthKey(seed.toLatin1().data());
+        QString ourRaw = QString(authKey.data());
+        //qDebug()<<"AuthKey: "<<ourRaw;
+        ourRaw.prepend("auth ");
+        ourRaw.append(" Mudlet 1.0.5");
+        //qDebug()<<"Raw: "<<ourRaw;
+        mpHost->sendATCPMsg(ourRaw);
+        //qDebug()<<"Seed: "<<seed;
+        
+        //qDebug()<<"AuthKey: "<<QString(authKey.data());
+        return;
+    }
+    else if (atcpString.startsWith("Auth.Request ON"))
+    {
+        type = "auth";
+        arg2 = atcpString.remove(0,13);
+    }
     else
     {
         qDebug()<<"Unanticipated ATCP: "<<atcpString;
@@ -4806,4 +4826,25 @@ void TLuaInterpreter::loadATCPTable( char* type, char* args )
     lua_pushstring( L, type );
     lua_pushstring( L, args );
     lua_call( L, 2, 0);
+}
+
+string TLuaInterpreter::generateAuthKey(string authSeed)
+{
+    cout<<"\nAuthSeed: "<<authSeed<<'\n';
+    int a = 17;
+    int n;
+    char returnVal[128];
+    for (int i = 0; i < 20; i++)
+    {
+        //cout<<"i: "<<i<<'\n';
+        n = ((int)authSeed.at(i)-96);
+        //cout<<"n: "<<n<<'\n';
+        if (i % 2 == 0)
+            a += n * (i | 13);
+        else
+            a -= n * (i | 11);
+    }
+    sprintf(returnVal,"%d",a);
+    //cout<<"Return: "<<returnVal;
+    return returnVal;
 }

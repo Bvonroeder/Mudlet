@@ -191,6 +191,11 @@ void Host::sendRaw( QString command )
     mTelnet.sendData( command ); 
 }
 
+void Host::sendATCPMsg( QString atcpString )
+{
+    mTelnet.sendATCP(atcpString);
+}
+
 
 /*QStringList Host::getBufferTable( int from, int to )
 {
