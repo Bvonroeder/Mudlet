@@ -47,6 +47,8 @@ cTelnet::cTelnet( Host * pH )
 , mGA_Driver( false )
 , mCommands( 0 )
 , mAlertOnNewData( true )
+, mMCCP_version_1( false )
+, mMCCP_version_2( false )
 {
     if( mpHost )
     {
@@ -415,6 +417,12 @@ void cTelnet::processTelnetCommand (const string &command)
                    }
                    else if( ( option == OPT_COMPRESS ) || ( option == OPT_COMPRESS2 ) )
                    {
+                       if( mpHost->getUsesATCP() ) 
+                        {
+                           sendTelnetOption( TN_DONT, option );
+                           hisOptionState[option] = false;
+                           break;
+                        }
                        //these are handled separately, as they're a bit special
                        if( ( option == OPT_COMPRESS ) && ( hisOptionState[static_cast<int>(OPT_COMPRESS2)] ) )
                        {
@@ -426,42 +434,33 @@ void cTelnet::processTelnetCommand (const string &command)
                        }
                        else
                        {
-                           sendTelnetOption( TN_DO, option );
-                           hisOptionState[option] = true;
-                           //inform MCCP object about the change
-                           if( ( option == OPT_COMPRESS ) ) 
-                           {
-                               mMCCP_version_1 = true;
-                               //MCCP->setMCCP1(true);
-                               cout << "MCCP v1 enabled." << endl;
-                           }
-                           else 
-                           {
-                               mMCCP_version_2 = true;
-                               //MCCP->setMCCP2( true );
-                               cout << "MCCP v2 enabled !" << endl;
-                           }
-                       }
-                   }
+                           if (!mpHost->getUsesATCP()) {
+                                sendTelnetOption( TN_DO, option );
+                                hisOptionState[option] = true;
+                                //inform MCCP object about the change
+                                if( ( option == OPT_COMPRESS ) ) 
+                                {   
+                                    mMCCP_version_1 = true;
+                                    //MCCP->setMCCP1(true);
+                                    cout << "MCCP v1 enabled." << endl;
+                                }
+                                else 
+                                {
+                                    mMCCP_version_2 = true;
+                                    //MCCP->setMCCP2( true );
+                                    cout << "MCCP v2 enabled !" << endl;
+                                }    
+                            }
+                        }
+                    }
                    else if( option == OPT_ATCP && mpHost->getUsesATCP() )
                    {
-                        QString helloString = "hello Mudlet1.0.5\nauth1\nchar_vitals 1\nroom_exits 1\nroom_brief 1";
+                        QString helloString = "hello Mudlet 1.0.5\nauth1\nchar_vitals 1\nroom_exits 1\nroom_brief 1";
                         sendTelnetOption(TN_DO,option);
                         sendATCP(helloString);
                         
 //                        socketOutRaw(cmd);
-                        //qDebug()<<"ATCP on";
-                        if ((mpHost->getLogin().size()>0) && (mpHost->getPass().size()>0))
-                        {
-                            QString loginString = ("login ");
-                            loginString += mpHost->getLogin();
-                            loginString += " ";
-                            loginString += mpHost->getPass();
-                            sendATCP(loginString);
-                            //qDebug()<<"Cmd2: "<<QString(cmd2.data());
-                            //socketOutRaw(cmd2);
-                        }
-                        
+                        //qDebug()<<"ATCP on";                        
                    }
                    else
                    {
@@ -1079,7 +1078,7 @@ void cTelnet::handle_socket_signal_readyRead()
             }
             else if( insb )
             {
-                if( ! mNeedDecompression )
+                if( ! mNeedDecompression && (mMCCP_version_1 || mMCCP_version_2))
                 {
                     cout << " looking for MCCP to initialize"<<endl;
                     // IAC SB COMPRESS WILL SE for MCCP v1 (unterminated invalid telnet sequence)

@@ -4789,6 +4789,14 @@ void TLuaInterpreter::parseATCP( QString & atcpString )
     {
         type = "auth";
         arg2 = atcpString.remove(0,13);
+        if ((mpHost->getLogin().size()>0) && (mpHost->getPass().size()>0))
+        {
+            QString loginString = ("login ");
+            loginString += mpHost->getLogin();
+            loginString += " ";
+            loginString += mpHost->getPass();
+            mpHost->sendATCPMsg(loginString);
+        }
     }
     else
     {
