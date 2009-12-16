@@ -120,7 +120,7 @@ private:
 
 
     QFont             mCommandLineFont;
-    QFont             mCommandSeperator;
+    QFont             mCommandSeparator;
 
     bool              mIsDebugConsole;    
     

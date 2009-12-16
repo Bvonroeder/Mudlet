@@ -151,7 +151,6 @@ public:
     int                mScreenHeight;
     int                mScreenWidth;
     QFont              mCommandLineFont;
-    QString            mCommandSeperator;
     bool               mSaveProfileOnExit;    
     //////////////////////////////////////////
     // this is serialized into hostOptions_2

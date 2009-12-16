@@ -378,9 +378,9 @@ void XMLimport::readHostPackage( Host * pT )
                 pT->mWrapIndentCount = readElementText().toInt();
                 continue;
             }
-            else if( name() == "mCommandSeperator" )
+            else if( name() == "mCommandSeparator" )
             {
-                pT->mCommandSeperator = readElementText();
+                pT->mCommandSeparator = readElementText();
                 continue;
             }
             else if( name() == "mFgColor")
