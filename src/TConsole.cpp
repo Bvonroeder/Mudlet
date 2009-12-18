@@ -662,7 +662,10 @@ void TConsole::changeColors()
 {
     if( mIsDebugConsole )
     {
-        mDisplayFont.setStyleStrategy( (QFont::StyleStrategy)(QFont::NoAntialias | QFont::PreferQuality) );
+        if( mpHost->mNoAntiAlias )
+            mpHost->mDisplayFont.setStyleStrategy( QFont::NoAntialias );
+        else
+            mpHost->mDisplayFont.setStyleStrategy( (QFont::StyleStrategy)( QFont::PreferAntialias | QFont::PreferQuality ) );
         console->setFont( mDisplayFont );
         console2->setFont( mDisplayFont );
         QPalette palette;
@@ -674,6 +677,10 @@ void TConsole::changeColors()
     }
     else if( mIsSubConsole )
     {
+        if( mpHost->mNoAntiAlias )
+            mpHost->mDisplayFont.setStyleStrategy( QFont::NoAntialias );
+        else
+            mpHost->mDisplayFont.setStyleStrategy( (QFont::StyleStrategy)( QFont::PreferAntialias | QFont::PreferQuality ) );
         mDisplayFont.setStyleStrategy( (QFont::StyleStrategy)(QFont::NoAntialias | QFont::PreferQuality ) );
         console->setFont( mDisplayFont );
         console2->setFont( mDisplayFont );
