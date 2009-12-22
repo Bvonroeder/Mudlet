@@ -135,7 +135,7 @@ void cTelnet::connectIt(const QString &address, int port)
 {
     if( socket.state() != QAbstractSocket::UnconnectedState )
     {
-        disconnect();
+        socket.abort();
         connectIt( address, port );
         return;
 
