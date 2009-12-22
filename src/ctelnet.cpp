@@ -718,7 +718,7 @@ void cTelnet::gotPrompt( string & mud_data )
             }
             if( mMudData[j] == '\n' )
             {
-                mMudData.erase( j, 1 );
+                //mMudData.erase( j, 1 );
                 break;
             }
             else
